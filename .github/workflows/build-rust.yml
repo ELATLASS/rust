@@ -1,0 +1,41 @@
+name: Build Maghribi API (Rust)
+
+on:
+  push:
+    paths:
+      - 'rust-api/**'
+      - '.github/workflows/build-rust.yml'
+  pull_request:
+    paths:
+      - 'rust-api/**'
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rust-api
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust-api/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('rust-api/Cargo.lock') }}
+      - name: Build (release)
+        run: cargo build --release
+      - name: Smoke test
+        run: |
+          ./target/release/maghribi-api &
+          sleep 3
+          curl -s -f http://localhost:3000/health || exit 1
+          curl -s -f http://localhost:3000/api/products || exit 1
+          echo "SMOKE TEST OK"

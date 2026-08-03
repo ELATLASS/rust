@@ -1,0 +1,28 @@
+{
+  "name": "Rust Server - Maroc",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {},
+    "ghcr.io/devcontainers/features/sshd:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-json",
+        "ms-vscode.shellcheck"
+      ]
+    }
+  },
+  "hostRequirements": {
+    "cpus": 4,
+    "memory": "16gb",
+    "storage": "32gb"
+  },
+  "forwardPorts": [28015, 28016],
+  "postCreateCommand": "chmod +x deploy.sh && bash deploy.sh",
+  "remoteEnv": {
+    "RUST_SERVER_NAME": "Maghribi Chill",
+    "RUST_SERVER_DESC": "Serveur Rust Maroc - RP/MMO Communauté Marocaine",
+    "STEAM_USER": "atlassabdou"
+  }
+}
